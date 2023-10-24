@@ -11,7 +11,7 @@ graph TD;
 ```bash
 $ docker compose -f compose.yml up -d
 [+] Running 2/2
- ✔ Container auto-reverse-proxy-nginx-proxy-1  Started                                                                                                                                                                    0.0s 
+ ✔ Container auto-reverse-proxy-nginx-proxy-1  Started        0.0s 
  ✔ Container auto-reverse-proxy-whoami-1       Started 
 
 $ docker compose -f compose.yml ps
@@ -75,19 +75,19 @@ CONTAINER ID   NAME                               CPU %     MEM USAGE / LIMIT   
 ```bash
 $ docker compose up -d
 [+] Running 3/3
- ✔ Network auto-reverse-proxy_default          Created                                                                                                                                                                    0.1s 
- ✔ Container auto-reverse-proxy-whoami-1       Started                                                                                                                                                                    0.0s 
- ✔ Container auto-reverse-proxy-nginx-proxy-1  Started                                                                                                                                                                    0.0s 
+ ✔ Network auto-reverse-proxy_default          Created        0.1s 
+ ✔ Container auto-reverse-proxy-whoami-1       Started        0.0s 
+ ✔ Container auto-reverse-proxy-nginx-proxy-1  Started        0.0s 
 $ docker compose ps   
 NAME                               IMAGE                    COMMAND                                       SERVICE       CREATED         STATUS         PORTS
 auto-reverse-proxy-nginx-proxy-1   nginxproxy/nginx-proxy   "/app/docker-entrypoint.sh forego start -r"   nginx-proxy   8 minutes ago   Up 8 minutes   0.0.0.0:80->80/tcp, :::80->80/tcp
 auto-reverse-proxy-whoami-1        jwilder/whoami           "/app/http"                                   whoami        8 minutes ago   Up 8 minutes   8000/tcp
 $ docker compose up -d --scale whoami=3
 [+] Running 4/4
- ✔ Container auto-reverse-proxy-nginx-proxy-1  Running                                                                                                                                                                    0.0s 
- ✔ Container auto-reverse-proxy-whoami-1       Running                                                                                                                                                                    0.0s 
- ✔ Container auto-reverse-proxy-whoami-3       Started                                                                                                                                                                    0.0s 
- ✔ Container auto-reverse-proxy-whoami-2       Started                                                                                                                                                                    0.0s 
+ ✔ Container auto-reverse-proxy-nginx-proxy-1  Running        0.0s 
+ ✔ Container auto-reverse-proxy-whoami-1       Running        0.0s 
+ ✔ Container auto-reverse-proxy-whoami-3       Started        0.0s 
+ ✔ Container auto-reverse-proxy-whoami-2       Started        0.0s 
 $ docker compose ps   
 NAME                               IMAGE                    COMMAND                                       SERVICE       CREATED         STATUS         PORTS
 auto-reverse-proxy-nginx-proxy-1   nginxproxy/nginx-proxy   "/app/docker-entrypoint.sh forego start -r"   nginx-proxy   8 minutes ago   Up 8 minutes   0.0.0.0:80->80/tcp, :::80->80/tcp
@@ -96,12 +96,12 @@ auto-reverse-proxy-whoami-2        jwilder/whoami           "/app/http"         
 auto-reverse-proxy-whoami-3        jwilder/whoami           "/app/http"                                   whoami        6 seconds ago   Up 5 seconds   8000/tcp
 $ docker compose up -d --scale whoami=1
 [+] Running 2/2
- ✔ Container auto-reverse-proxy-whoami-1       Running                                                                                                                                                                    0.0s 
- ✔ Container auto-reverse-proxy-nginx-proxy-1  Running                                                                                                                                                                    0.0s 
+ ✔ Container auto-reverse-proxy-whoami-1       Running        0.0s 
+ ✔ Container auto-reverse-proxy-nginx-proxy-1  Running        0.0s 
 $ docker compose down                  
 [+] Running 3/3
- ✔ Container auto-reverse-proxy-whoami-1       Removed                                                                                                                                                                    0.4s 
- ✔ Container auto-reverse-proxy-nginx-proxy-1  Removed                                                                                                                                                                    1.0s 
+ ✔ Container auto-reverse-proxy-whoami-1       Removed        0.4s 
+ ✔ Container auto-reverse-proxy-nginx-proxy-1  Removed        1.0s 
  ✔ Network auto-reverse-proxy_default          Removed
 ```
 
@@ -133,3 +133,34 @@ $ docker compose down
 #### logs
 
 - 서비스의 로그를 확인할 수 있습니다. logs 뒤에 서비스 이름을 적지 않으면 도커 컴포즈가 관리하는 모든 서비스의 로그를 함께 보여줍니다.
+
+
+### Scale Up / Down
+```bash
+$ docker compose up -d
+[+] Running 4/4
+ ✔ Network auto-reverse-proxy_default          Created        0.1s 
+ ✔ Container auto-reverse-proxy-whoami-2       Started        0.0s 
+ ✔ Container auto-reverse-proxy-nginx-proxy-1  Started        0.0s 
+ ✔ Container auto-reverse-proxy-whoami-1       Started        0.0s 
+$ docker compose ps
+NAME                               IMAGE                    COMMAND                                       SERVICE       CREATED          STATUS          PORTS
+auto-reverse-proxy-nginx-proxy-1   nginxproxy/nginx-proxy   "/app/docker-entrypoint.sh forego start -r"   nginx-proxy   22 seconds ago   Up 21 seconds   0.0.0.0:80->80/tcp, :::80->80/tcp
+auto-reverse-proxy-whoami-1        jwilder/whoami           "/app/http"                                   whoami        22 seconds ago   Up 21 seconds   8000/tcp
+auto-reverse-proxy-whoami-2        jwilder/whoami           "/app/http"                                   whoami        22 seconds ago   Up 20 seconds   8000/tcp
+$ docker stats --no-stream
+CONTAINER ID   NAME                               CPU %     MEM USAGE / LIMIT   MEM %     NET I/O       BLOCK I/O   PIDS
+15013179a5bc   auto-reverse-proxy-nginx-proxy-1   0.26%     44.16MiB / 70MiB    63.09%    1.43kB / 0B   0B / 0B     31
+2f88c49dc8fa   auto-reverse-proxy-whoami-1        0.00%     1.176MiB / 10MiB    11.76%    1.43kB / 0B   0B / 0B     5
+284bf83f71be   auto-reverse-proxy-whoami-2        0.00%     1.18MiB / 10MiB     11.80%    1.13kB / 0B   0B / 0B     5
+$ docker compose up -d    
+[+] Running 3/3
+ ✔ Container auto-reverse-proxy-whoami-1       Running        0.0s 
+ ✔ Container auto-reverse-proxy-whoami-2       Running        0.0s 
+ ✔ Container auto-reverse-proxy-nginx-proxy-1  Started        0.6s 
+$ docker stats --no-stream                                         
+CONTAINER ID   NAME                               CPU %     MEM USAGE / LIMIT   MEM %     NET I/O       BLOCK I/O   PIDS
+a1ce25d31804   auto-reverse-proxy-nginx-proxy-1   0.27%     49.64MiB / 100MiB   49.64%    726B / 0B     0B / 0B     29
+2f88c49dc8fa   auto-reverse-proxy-whoami-1        0.00%     2.637MiB / 10MiB    26.37%    1.57kB / 0B   0B / 0B     5
+284bf83f71be   auto-reverse-proxy-whoami-2        0.00%     2.641MiB / 10MiB    26.41%    1.27kB / 0B   0B / 0B     5
+```
