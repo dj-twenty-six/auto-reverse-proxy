@@ -7,3 +7,6 @@
 ### v0.2.0
 - [ ] scale-up
 - [ ] scale-out
+
+### v0.3.0
+- [ ] scale up & down
