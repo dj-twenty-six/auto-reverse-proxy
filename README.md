@@ -148,19 +148,26 @@ NAME                               IMAGE                    COMMAND             
 auto-reverse-proxy-nginx-proxy-1   nginxproxy/nginx-proxy   "/app/docker-entrypoint.sh forego start -r"   nginx-proxy   22 seconds ago   Up 21 seconds   0.0.0.0:80->80/tcp, :::80->80/tcp
 auto-reverse-proxy-whoami-1        jwilder/whoami           "/app/http"                                   whoami        22 seconds ago   Up 21 seconds   8000/tcp
 auto-reverse-proxy-whoami-2        jwilder/whoami           "/app/http"                                   whoami        22 seconds ago   Up 20 seconds   8000/tcp
+
 $ docker stats --no-stream
 CONTAINER ID   NAME                               CPU %     MEM USAGE / LIMIT   MEM %     NET I/O       BLOCK I/O   PIDS
 15013179a5bc   auto-reverse-proxy-nginx-proxy-1   0.26%     44.16MiB / 70MiB    63.09%    1.43kB / 0B   0B / 0B     31
 2f88c49dc8fa   auto-reverse-proxy-whoami-1        0.00%     1.176MiB / 10MiB    11.76%    1.43kB / 0B   0B / 0B     5
 284bf83f71be   auto-reverse-proxy-whoami-2        0.00%     1.18MiB / 10MiB     11.80%    1.13kB / 0B   0B / 0B     5
+
+#
+# edit - https://github.com/dj-twenty-six/auto-reverse-proxy/pull/3/commits/9093874522a1cb7e2d71646ef541edf606c5f709
+#
+
 $ docker compose up -d    
 [+] Running 3/3
  ✔ Container auto-reverse-proxy-whoami-1       Running        0.0s 
  ✔ Container auto-reverse-proxy-whoami-2       Running        0.0s 
  ✔ Container auto-reverse-proxy-nginx-proxy-1  Started        0.6s 
-$ docker stats --no-stream                                         
+
+$ docker stats --no-stream 
 CONTAINER ID   NAME                               CPU %     MEM USAGE / LIMIT   MEM %     NET I/O       BLOCK I/O   PIDS
-a1ce25d31804   auto-reverse-proxy-nginx-proxy-1   0.27%     49.64MiB / 100MiB   49.64%    726B / 0B     0B / 0B     29
-2f88c49dc8fa   auto-reverse-proxy-whoami-1        0.00%     2.637MiB / 10MiB    26.37%    1.57kB / 0B   0B / 0B     5
-284bf83f71be   auto-reverse-proxy-whoami-2        0.00%     2.641MiB / 10MiB    26.41%    1.27kB / 0B   0B / 0B     5
+b6824f38dbcb   auto-reverse-proxy-nginx-proxy-1   0.28%     46.05MiB / 77MiB    59.80%    796B / 0B     0B / 0B     31
+2f88c49dc8fa   auto-reverse-proxy-whoami-1        0.01%     2.637MiB / 10MiB    26.37%    1.64kB / 0B   0B / 0B     5
+284bf83f71be   auto-reverse-proxy-whoami-2        0.00%     2.637MiB / 10MiB    26.37%    1.41kB / 0B   0B / 0B     5
 ```
