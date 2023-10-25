@@ -17,3 +17,6 @@
 - [ ] append dj26-blog
 - [ ] append dj26 member 1 blog
 - [ ] append dj26 member 2 blog
+
+### v0.5.0
+- [ ] Performance test
