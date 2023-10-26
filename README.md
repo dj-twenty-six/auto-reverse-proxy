@@ -171,3 +171,32 @@ b6824f38dbcb   auto-reverse-proxy-nginx-proxy-1   0.28%     46.05MiB / 77MiB    
 2f88c49dc8fa   auto-reverse-proxy-whoami-1        0.01%     2.637MiB / 10MiB    26.37%    1.64kB / 0B   0B / 0B     5
 284bf83f71be   auto-reverse-proxy-whoami-2        0.00%     2.637MiB / 10MiB    26.37%    1.41kB / 0B   0B / 0B     5
 ```
+
+### docker stats 2 CSV
+- docker container resource usage statistics -> csv log
+```bash
+# Check container name
+$ docker compose ps           
+NAME                               IMAGE                    COMMAND                                           SERVICE       CREATED          STATUS          PORTS
+auto-reverse-proxy-api-1           pysatellite/dj-api       "uvicorn app.main:app --host 0.0.0.0 --port 80"   api           2 hours ago      Up 2 hours      80/tcp
+auto-reverse-proxy-nginx-proxy-1   nginxproxy/nginx-proxy   "/app/docker-entrypoint.sh forego start -r"       nginx-proxy   22 minutes ago   Up 22 minutes   0.0.0.0:80->80/tcp, :::80->80/tcp
+
+# SAVE CSV LOG
+$ nohup sh docker_stats2log.sh auto-reverse-proxy-api-1 > api.log &
+[1] 38898
+nohup: ignoring input and redirecting stderr to stdout
+
+# VIEW
+$ tail -f api.log 
+2023-10-26 13:41:13,auto-reverse-proxy-api-1,0.23%,14.24MiB / 50MiB,28.48%,50MB / 28.9MB,0B / 0B
+2023-10-26 13:41:16,auto-reverse-proxy-api-1,0.16%,14.24MiB / 50MiB,28.48%,50MB / 28.9MB,0B / 0B
+2023-10-26 13:41:19,auto-reverse-proxy-api-1,0.22%,14.24MiB / 50MiB,28.48%,50MB / 28.9MB,0B / 0B
+
+### STOP SAVE
+$ ps -ef | grep 38898
+dj26       38898   38487  0 13:41 pts/10   00:00:00 sh docker_stats2log.sh auto-reverse-proxy-api-1
+root       39346   38898  0 13:42 pts/10   00:00:00 sudo docker stats --no-stream --format {{.Name}},{{.CPUPerc}},{{.MemUsage}},{{.MemPerc}},{{.NetIO}},{{.BlockIO}} auto-reverse-proxy-api-1
+dj26       39364   38487  0 13:42 pts/10   00:00:00 grep --color=auto --exclude-dir=.bzr --exclude-dir=CVS --exclude-dir=.git --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.idea --exclude-dir=.tox 38898
+$ kill 38898
+[1]  + 38898 terminated  nohup sh docker_stats2log.sh auto-reverse-proxy-api-1 > api.log
+```

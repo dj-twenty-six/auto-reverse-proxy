@@ -20,3 +20,6 @@
 
 ### v0.5.0
 - [ ] Performance test
+
+### v0.5.1
+- [ ] docker stats -> csv log
